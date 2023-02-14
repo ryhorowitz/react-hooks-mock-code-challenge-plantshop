@@ -5,13 +5,18 @@ import Search from "./Search";
 
 function PlantPage() {
   const [plants, setPlants] = useState([])
-
+  const [search, setSearch] = useState('')
   useEffect( () => {
     fetch(`http://localhost:6001/plants`)
     .then(r => r.json())
     .then(plants => setPlants(plants))
     .catch(err => console.error('ERROR', err))
   }, [])
+
+  let displayedPlants = plants.filter( plant => {
+    //plant does equal what in search bar
+    return plant.name.includes(search)
+  })
 
   function handleAddPlant(form) {
     //copy form with added id
@@ -33,8 +38,8 @@ function PlantPage() {
   return (
     <main>
       <NewPlantForm onAddPlant={handleAddPlant}/>
-      <Search />
-      <PlantList plants={plants}/>
+      <Search onSearch={setSearch}/>
+      <PlantList plants={displayedPlants}/>
     </main>
   );
 }
